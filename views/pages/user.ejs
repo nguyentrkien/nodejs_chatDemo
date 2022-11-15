@@ -1,0 +1,54 @@
+<%- include('layout.ejs'); %>
+<section class="users">
+    <header>
+      <div class="content">
+        <img src="<%-user.src%>" alt="">
+        <div class="details">
+          <span> <%= user.FNAME + user.LNAME %></span>
+          <p> Online</p>
+        </div>
+      </div>
+      <a href="/logout?id=<%-user.ACCOUNT_ID%>" onclick="logout()" class="logout" >Đăng xuất</a>
+    </header>
+    <div class="search">
+      <span class="text">Lựa chọn bạn bè để trò chuyện</span>
+      <input class="" type="text" name="search" id="" placeholder="Nhập tên để tìm kiếm">
+      <button class=""><i class="fas fa-search"></i></button>
+    </div>
+    <div class="users-list">
+      
+    </div>
+  </section>
+</div>
+<script>
+  const usersList = document.querySelector(".users-list");
+  let xhr = new XMLHttpRequest();
+  setInterval(()=>{
+  let list ='';
+  xhr.open("GET", "/userActive", true);
+  xhr.onload = ()=>{
+    if(xhr.readyState === XMLHttpRequest.DONE){
+        if(xhr.status === 200){
+          let data = JSON.parse(xhr.response);
+          data.forEach(element => {
+            if(element.ACCOUNT_ID != '<%-user.ACCOUNT_ID%>'){
+              list += `<a class="activeList" href="/chat?userOut_id=${element.ACCOUNT_ID}&imgSrc=${element.src}"><div class="content">
+                      <img src="${element.src}" alt="">
+                      <div class="details">
+                      <span> ${element.FNAME} ${element.LNAME} %></span>
+                      <p> ${element.Status}</p>
+                      </div>
+                      </div></a>`
+            };
+            });
+            
+          }
+          usersList.innerHTML = list;
+        }
+    }
+  xhr.send();},500);
+
+</script>
+
+</body>
+</html>
